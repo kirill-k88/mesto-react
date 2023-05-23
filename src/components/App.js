@@ -225,7 +225,7 @@ function App() {
           </div>
         </div> */}
 
-        <template id="Card">
+        {/*         <template id="Card">
           <li className="cards__card">
             <button className="cards__button-remove common-link" type="button"></button>
             <img className="cards__photo" alt="" />
@@ -237,7 +237,7 @@ function App() {
               </div>
             </div>
           </li>
-        </template>
+        </template> */}
 
         <Footer />
       </div>
