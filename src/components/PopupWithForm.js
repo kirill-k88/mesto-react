@@ -1,6 +1,6 @@
 function PopupWithForm({ name, title, buttonName, isOpen, onClose, children }) {
   return (
-    <div className={`popup popup_type_${name} ${isOpen && 'popup_opened'}`}>
+    <div className={`popup ${isOpen && 'popup_opened'}`}>
       <div className="popup__container">
         <button
           className="popup__button-close common-link"
@@ -9,13 +9,13 @@ function PopupWithForm({ name, title, buttonName, isOpen, onClose, children }) {
         <form
           className={`popup__form popup__form_type_${name}`}
           name={`${name}-form`}
-          novalidate>
+          noValidate>
           <h2 className="popup__title">{title}</h2>
           {children}
           <button
             className="popup__button-submit common-link popup__button-submit_inactive"
             type="submit">
-            {buttonName}
+            {buttonName || 'Сохранить'}
           </button>
         </form>
       </div>

@@ -1,14 +1,14 @@
-import React from 'react';
+import { useEffect, useState } from 'react';
 import api from '../utils/Api.js';
 import Card from './Card.js';
 
 function Main({ onEditAvatar, onEditProfile, onAddPlace, onCardClick }) {
-  const [userName, setUserName] = React.useState('');
-  const [userDescription, setUserDescription] = React.useState('');
-  const [userAvatar, setUserAvatar] = React.useState('');
-  const [cards, setCards] = React.useState([]);
+  const [userName, setUserName] = useState('');
+  const [userDescription, setUserDescription] = useState('');
+  const [userAvatar, setUserAvatar] = useState('');
+  const [cards, setCards] = useState([]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     api
       .getUserInfo()
       .then(result => {
@@ -19,9 +19,6 @@ function Main({ onEditAvatar, onEditProfile, onAddPlace, onCardClick }) {
       .catch(err => {
         console.log(err);
       });
-  }, []);
-
-  React.useEffect(() => {
     api
       .getInitialCards()
       .then(result => {
@@ -40,8 +37,7 @@ function Main({ onEditAvatar, onEditProfile, onAddPlace, onCardClick }) {
             className="profile__button-avatar common-link"
             type="button"
             onClick={onEditAvatar}
-            style={{ backgroundImage: `url(${userAvatar})` }}
-          ></button>
+            style={{ backgroundImage: `url(${userAvatar})` }}></button>
         </div>
         <div className="profile__info">
           <h1 className="profile__name">{userName}</h1>
@@ -49,21 +45,23 @@ function Main({ onEditAvatar, onEditProfile, onAddPlace, onCardClick }) {
           <button
             className="profile__button-edit common-link"
             type="button"
-            onClick={onEditProfile}
-          ></button>
+            onClick={onEditProfile}></button>
           <p className="profile__ocupation">{userDescription}</p>
         </div>
         <button
           className="profile__button-add common-link"
           type="button"
-          onClick={onAddPlace}
-        ></button>
+          onClick={onAddPlace}></button>
       </section>
 
       <section className="cards">
         <ul className="cards__list">
           {cards.map(card => (
-            <Card card={card} onCardClick={onCardClick}></Card>
+            <Card
+              card={card}
+              onCardClick={onCardClick}
+              key={card._id}
+            />
           ))}
         </ul>
       </section>
