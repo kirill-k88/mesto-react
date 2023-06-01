@@ -1,24 +1,13 @@
-import { useEffect, useState } from 'react';
-import api from '../utils/Api.js';
+import React /* , { useEffect, useState }  */ from 'react';
+/* import api from '../utils/Api.js'; */
 import Card from './Card.js';
+import { CurrentUserContext } from '../contexts/CurrentUserContext.js';
 
-function Main({ onEditAvatar, onEditProfile, onAddPlace, onCardClick }) {
-  const [userName, setUserName] = useState('');
-  const [userDescription, setUserDescription] = useState('');
-  const [userAvatar, setUserAvatar] = useState('');
-  const [cards, setCards] = useState([]);
+function Main({ cards, onEditAvatar, onEditProfile, onAddPlace, onCardClick, onCardLike }) {
+  /* const [cards, setCards] = useState([]); */
+  const currentUser = React.useContext(CurrentUserContext);
 
-  useEffect(() => {
-    api
-      .getUserInfo()
-      .then(result => {
-        setUserName(result.name);
-        setUserDescription(result.about);
-        setUserAvatar(result.avatar);
-      })
-      .catch(err => {
-        console.log(err);
-      });
+  /*   useEffect(() => {
     api
       .getInitialCards()
       .then(result => {
@@ -27,7 +16,7 @@ function Main({ onEditAvatar, onEditProfile, onAddPlace, onCardClick }) {
       .catch(err => {
         console.log(err);
       });
-  }, []);
+  }, []); */
 
   return (
     <main>
@@ -37,31 +26,30 @@ function Main({ onEditAvatar, onEditProfile, onAddPlace, onCardClick }) {
             className="profile__button-avatar common-link"
             type="button"
             onClick={onEditAvatar}
-            style={{ backgroundImage: `url(${userAvatar})` }}></button>
+            style={{ backgroundImage: `url(${currentUser.avatar})` }}
+          ></button>
         </div>
         <div className="profile__info">
-          <h1 className="profile__name">{userName}</h1>
+          <h1 className="profile__name">{currentUser.name}</h1>
 
           <button
             className="profile__button-edit common-link"
             type="button"
-            onClick={onEditProfile}></button>
-          <p className="profile__ocupation">{userDescription}</p>
+            onClick={onEditProfile}
+          ></button>
+          <p className="profile__ocupation">{currentUser.about}</p>
         </div>
         <button
           className="profile__button-add common-link"
           type="button"
-          onClick={onAddPlace}></button>
+          onClick={onAddPlace}
+        ></button>
       </section>
 
       <section className="cards">
         <ul className="cards__list">
           {cards.map(card => (
-            <Card
-              card={card}
-              onCardClick={onCardClick}
-              key={card._id}
-            />
+            <Card card={card} onCardClick={onCardClick} onCardLike={onCardLike} key={card._id} />
           ))}
         </ul>
       </section>
