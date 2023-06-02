@@ -29,11 +29,11 @@ class Api {
     }).then(this._getResponseData);
   }
 
-  sendNewCard(userObject) {
+  sendNewCard(cardObject) {
     return fetch(`${this._baseUrl}/cards`, {
       method: 'POST',
       headers: this._headers,
-      body: JSON.stringify(userObject)
+      body: JSON.stringify(cardObject)
     }).then(this._getResponseData);
   }
 

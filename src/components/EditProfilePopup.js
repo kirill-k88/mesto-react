@@ -5,6 +5,7 @@ import PopupWithForm from './PopupWithForm';
 function EditProfilePopup({ isOpen, onClose, onUpdateUser }) {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const currentUser = useContext(CurrentUserContext);
 
@@ -18,11 +19,14 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser }) {
 
   function handleSubmit(evt) {
     evt.preventDefault();
-
-    onUpdateUser({
-      name,
-      about: description
-    });
+    setIsLoading(true);
+    onUpdateUser(
+      {
+        name,
+        about: description
+      },
+      setIsLoading
+    );
   }
 
   useEffect(() => {
@@ -36,6 +40,7 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser }) {
       title="Редактировать профиль"
       buttonName="Сохранить"
       isOpen={isOpen}
+      isLoading={isLoading}
       onClose={onClose}
       onSubmit={handleSubmit}>
       <input
