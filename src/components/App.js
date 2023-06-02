@@ -6,6 +6,8 @@ import PopupWithForm from './PopupWithForm.js';
 import ImagePopup from './ImagePopup.js';
 import { CurrentUserContext } from '../contexts/CurrentUserContext.js';
 import api from '../utils/Api.js';
+import EditProfilePopup from './EditProfilePopup.js';
+import EditAvatarPopup from './EditAvatarPopup.js';
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
@@ -52,6 +54,30 @@ function App() {
       });
   }
 
+  function handleUpdateUser(userObject) {
+    api
+      .modifyUserInfo(userObject)
+      .then(result => {
+        setCurrentUser(result);
+        closeAllPopups();
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }
+
+  function handleUpdateAvatar(avatarObject) {
+    api
+      .modifyAvatar(avatarObject)
+      .then(result => {
+        setCurrentUser(result);
+        closeAllPopups();
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }
+
   function closeAllPopups() {
     setIsEditAvatarPopupOpen(false);
     setIsEditProfilePopupOpen(false);
@@ -76,28 +102,6 @@ function App() {
       .catch(err => {
         console.log(err);
       });
-
-    /*     api
-      .getUserInfo()
-      .then(result => {
-        setCurrentUser({
-          name: result.name,
-          about: result.about,
-          avatar: result.avatar,
-          _id: result._id
-        });
-      })
-      .catch(err => {
-        console.log(err);
-      });
-    api
-      .getInitialCards()
-      .then(result => {
-        setCards(result);
-      })
-      .catch(err => {
-        console.log(err);
-      }); */
   }, []);
 
   return (
@@ -114,33 +118,17 @@ function App() {
           onCardDelete={handleCardDelete}
         />
 
-        <PopupWithForm
-          name="edit"
-          title="Редактировать профиль"
-          buttonName="Сохранить"
+        <EditProfilePopup
           isOpen={isEditProfilePopupOpen}
-          onClose={closeAllPopups}>
-          <input
-            className="popup__input popup__input_content_heading"
-            name="profileNameInput"
-            type="text"
-            placeholder="Имя"
-            required
-            minLength="2"
-            maxLength="40"
-          />
-          <span className="popup__input-error profileNameInput-error"></span>
-          <input
-            className="popup__input popup__input_content_option"
-            name="ocupationInput"
-            type="text"
-            placeholder="О себе"
-            required
-            minLength="2"
-            maxLength="200"
-          />
-          <span className="popup__input-error ocupationInput-error"></span>
-        </PopupWithForm>
+          onClose={closeAllPopups}
+          onUpdateUser={handleUpdateUser}
+        />
+
+        <EditAvatarPopup
+          isOpen={isEditAvatarPopupOpen}
+          onClose={closeAllPopups}
+          onUpdateAvatar={handleUpdateAvatar}
+        />
 
         <PopupWithForm
           name="add"
@@ -166,22 +154,6 @@ function App() {
             type="url"
           />
           <span className="popup__input-error cardUrlInput-error"></span>
-        </PopupWithForm>
-
-        <PopupWithForm
-          name="avatar"
-          title="Обновить аватар"
-          buttonName="Сохранить"
-          isOpen={isEditAvatarPopupOpen}
-          onClose={closeAllPopups}>
-          <input
-            className="popup__input popup__input_content_option"
-            name="avatarUrlInput"
-            placeholder="Ссылка на аватар"
-            required
-            type="url"
-          />
-          <span className="popup__input-error avatarUrlInput-error"></span>
         </PopupWithForm>
 
         <PopupWithForm

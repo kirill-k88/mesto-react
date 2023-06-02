@@ -1,5 +1,4 @@
-import React /* , { useEffect, useState }  */ from 'react';
-/* import api from '../utils/Api.js'; */
+import { useContext } from 'react';
 import Card from './Card.js';
 import { CurrentUserContext } from '../contexts/CurrentUserContext.js';
 
@@ -12,19 +11,7 @@ function Main({
   onCardLike,
   onCardDelete
 }) {
-  /* const [cards, setCards] = useState([]); */
-  const currentUser = React.useContext(CurrentUserContext);
-
-  /*   useEffect(() => {
-    api
-      .getInitialCards()
-      .then(result => {
-        setCards(result);
-      })
-      .catch(err => {
-        console.log(err);
-      });
-  }, []); */
+  const currentUser = useContext(CurrentUserContext);
 
   return (
     <main>
