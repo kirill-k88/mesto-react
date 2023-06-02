@@ -18,21 +18,38 @@ function App() {
   function handleEditAvatarClick() {
     setIsEditAvatarPopupOpen(true);
   }
+
   function handleEditProfileClick() {
     setIsEditProfilePopupOpen(true);
   }
+
   function handleAddPlaceClick() {
     setIsAddPlacePopupOpen(true);
   }
+
   function handleCardClick(card) {
     setSelectedCard(card);
   }
+
   function handleCardLike(card) {
-    const isLiked = card.likes.some(i => i._id === currentUser._id);
+    const isLiked = card.likes.some(item => item._id === currentUser._id);
 
     (!isLiked ? api.sendLike(card._id) : api.deleteLike(card._id)).then(newCard => {
-      setCards(cards => cards.map(c => (c._id === card._id ? newCard : c)));
+      setCards(cards => cards.map(item => (item._id === card._id ? newCard : item)));
     });
+  }
+
+  function handleCardDelete(card) {
+    api
+      .deleteCard(card._id)
+      .then(({ message }) => {
+        if (message === 'Пост удалён') {
+          setCards(cards.filter(item => item._id !== card._id));
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      });
   }
 
   function closeAllPopups() {
@@ -43,7 +60,24 @@ function App() {
   }
 
   useEffect(() => {
-    api
+    Promise.all([api.getUserInfo(), api.getInitialCards()])
+      .then(results => {
+        setCurrentUser({
+          name: results[0].name,
+          about: results[0].about,
+          avatar: results[0].avatar,
+          _id: results[0]._id
+        });
+        return Promise.resolve(results[1]);
+      })
+      .then(initialCards => {
+        setCards(initialCards);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+
+    /*     api
       .getUserInfo()
       .then(result => {
         setCurrentUser({
@@ -63,7 +97,7 @@ function App() {
       })
       .catch(err => {
         console.log(err);
-      });
+      }); */
   }, []);
 
   return (
@@ -77,6 +111,7 @@ function App() {
           onEditAvatar={handleEditAvatarClick}
           onCardClick={handleCardClick}
           onCardLike={handleCardLike}
+          onCardDelete={handleCardDelete}
         />
 
         <PopupWithForm
@@ -84,8 +119,7 @@ function App() {
           title="Редактировать профиль"
           buttonName="Сохранить"
           isOpen={isEditProfilePopupOpen}
-          onClose={closeAllPopups}
-        >
+          onClose={closeAllPopups}>
           <input
             className="popup__input popup__input_content_heading"
             name="profileNameInput"
@@ -113,8 +147,7 @@ function App() {
           title="Новое место"
           buttonName="Создать"
           isOpen={isAddPlacePopupOpen}
-          onClose={closeAllPopups}
-        >
+          onClose={closeAllPopups}>
           <input
             className="popup__input popup__input_content_heading"
             name="cardNameInput"
@@ -140,8 +173,7 @@ function App() {
           title="Обновить аватар"
           buttonName="Сохранить"
           isOpen={isEditAvatarPopupOpen}
-          onClose={closeAllPopups}
-        >
+          onClose={closeAllPopups}>
           <input
             className="popup__input popup__input_content_option"
             name="avatarUrlInput"
@@ -156,10 +188,12 @@ function App() {
           name="confirm"
           title="Вы уверены?"
           buttonName="Да"
-          onClose={closeAllPopups}
-        ></PopupWithForm>
+          onClose={closeAllPopups}></PopupWithForm>
 
-        <ImagePopup card={selectedCard} onClose={closeAllPopups} />
+        <ImagePopup
+          card={selectedCard}
+          onClose={closeAllPopups}
+        />
 
         <Footer />
       </div>

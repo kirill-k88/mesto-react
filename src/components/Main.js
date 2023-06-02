@@ -3,7 +3,15 @@ import React /* , { useEffect, useState }  */ from 'react';
 import Card from './Card.js';
 import { CurrentUserContext } from '../contexts/CurrentUserContext.js';
 
-function Main({ cards, onEditAvatar, onEditProfile, onAddPlace, onCardClick, onCardLike }) {
+function Main({
+  cards,
+  onEditAvatar,
+  onEditProfile,
+  onAddPlace,
+  onCardClick,
+  onCardLike,
+  onCardDelete
+}) {
   /* const [cards, setCards] = useState([]); */
   const currentUser = React.useContext(CurrentUserContext);
 
@@ -26,8 +34,7 @@ function Main({ cards, onEditAvatar, onEditProfile, onAddPlace, onCardClick, onC
             className="profile__button-avatar common-link"
             type="button"
             onClick={onEditAvatar}
-            style={{ backgroundImage: `url(${currentUser.avatar})` }}
-          ></button>
+            style={{ backgroundImage: `url(${currentUser.avatar})` }}></button>
         </div>
         <div className="profile__info">
           <h1 className="profile__name">{currentUser.name}</h1>
@@ -35,21 +42,25 @@ function Main({ cards, onEditAvatar, onEditProfile, onAddPlace, onCardClick, onC
           <button
             className="profile__button-edit common-link"
             type="button"
-            onClick={onEditProfile}
-          ></button>
+            onClick={onEditProfile}></button>
           <p className="profile__ocupation">{currentUser.about}</p>
         </div>
         <button
           className="profile__button-add common-link"
           type="button"
-          onClick={onAddPlace}
-        ></button>
+          onClick={onAddPlace}></button>
       </section>
 
       <section className="cards">
         <ul className="cards__list">
           {cards.map(card => (
-            <Card card={card} onCardClick={onCardClick} onCardLike={onCardLike} key={card._id} />
+            <Card
+              card={card}
+              onCardClick={onCardClick}
+              onCardLike={onCardLike}
+              onCardDelete={onCardDelete}
+              key={card._id}
+            />
           ))}
         </ul>
       </section>
