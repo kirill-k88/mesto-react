@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import Header from './Header.js';
 import Main from './Main.js';
 import Footer from './Footer.js';
-/* import PopupWithForm from './PopupWithForm.js'; */
 import ImagePopup from './ImagePopup.js';
 import { CurrentUserContext } from '../contexts/CurrentUserContext.js';
 import api from '../utils/Api.js';
@@ -16,7 +15,7 @@ function App() {
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
   const [isConfirmPopupOpen, setIsConfirmPopupOpen] = useState(false);
-  const [confirmFunction, setConfirmFunction] = useState({});
+  const [confirmFunction, setConfirmFunction] = useState(() => {});
   const [selectedCard, setSelectedCard] = useState({});
   const [currentUser, setCurrentUser] = useState({});
   const [cards, setCards] = useState([]);
@@ -37,9 +36,28 @@ function App() {
     setSelectedCard(card);
   }
 
-  function handleCardDeleteClick(onConfirm) {
-    setConfirmFunction(onConfirm);
+  function handleCardDeleteClick(card) {
+    setConfirmFunction(() => setIsLoading => {
+      handleCardDelete(card, setIsLoading);
+    });
     setIsConfirmPopupOpen(true);
+  }
+
+  function handleCardDelete(card, setIsLoading) {
+    api
+      .deleteCard(card._id)
+      .then(({ message }) => {
+        if (message === 'Пост удалён') {
+          setCards(cards.filter(item => item._id !== card._id));
+          closeAllPopups();
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   }
 
   function handleCardLike(card) {
@@ -48,19 +66,6 @@ function App() {
     (!isLiked ? api.sendLike(card._id) : api.deleteLike(card._id)).then(newCard => {
       setCards(cards => cards.map(item => (item._id === card._id ? newCard : item)));
     });
-  }
-
-  function handleCardDelete(card) {
-    api
-      .deleteCard(card._id)
-      .then(({ message }) => {
-        if (message === 'Пост удалён') {
-          setCards(cards.filter(item => item._id !== card._id));
-        }
-      })
-      .catch(err => {
-        console.log(err);
-      });
   }
 
   function handleUpdateUser(userObject, setIsLoading) {
@@ -149,7 +154,6 @@ function App() {
           onCardClick={handleCardClick}
           onCardLike={handleCardLike}
           onCardDeleteClick={handleCardDeleteClick}
-          onCardDelete={handleCardDelete}
         />
         <EditProfilePopup
           isOpen={isEditProfilePopupOpen}
@@ -171,10 +175,7 @@ function App() {
           onClose={closeAllPopups}
           onConfirm={confirmFunction}
         />
-        <ImagePopup
-          card={selectedCard}
-          onClose={closeAllPopups}
-        />
+        <ImagePopup card={selectedCard} onClose={closeAllPopups} />
         <Footer />
       </div>
     </CurrentUserContext.Provider>

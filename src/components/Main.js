@@ -9,8 +9,7 @@ function Main({
   onAddPlace,
   onCardClick,
   onCardLike,
-  onCardDeleteClick,
-  onCardDelete
+  onCardDeleteClick
 }) {
   const currentUser = useContext(CurrentUserContext);
 
@@ -22,7 +21,8 @@ function Main({
             className="profile__button-avatar common-link"
             type="button"
             onClick={onEditAvatar}
-            style={{ backgroundImage: `url(${currentUser.avatar})` }}></button>
+            style={{ backgroundImage: `url(${currentUser.avatar})` }}
+          ></button>
         </div>
         <div className="profile__info">
           <h1 className="profile__name">{currentUser.name}</h1>
@@ -30,13 +30,15 @@ function Main({
           <button
             className="profile__button-edit common-link"
             type="button"
-            onClick={onEditProfile}></button>
+            onClick={onEditProfile}
+          ></button>
           <p className="profile__ocupation">{currentUser.about}</p>
         </div>
         <button
           className="profile__button-add common-link"
           type="button"
-          onClick={onAddPlace}></button>
+          onClick={onAddPlace}
+        ></button>
       </section>
 
       <section className="cards">
@@ -47,7 +49,6 @@ function Main({
               onCardClick={onCardClick}
               onCardLike={onCardLike}
               onCardDeleteClick={onCardDeleteClick}
-              onCardDelete={onCardDelete}
               key={card._id}
             />
           ))}

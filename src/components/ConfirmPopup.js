@@ -8,8 +8,7 @@ function ConfirmPopup({ isOpen, onClose, onConfirm }) {
     evt.preventDefault();
     setIsLoading(true);
 
-    onConfirm();
-    setIsLoading(false);
+    onConfirm(setIsLoading);
   }
 
   return (
@@ -20,7 +19,8 @@ function ConfirmPopup({ isOpen, onClose, onConfirm }) {
       isOpen={isOpen}
       onClose={onClose}
       onSubmit={handleSubmit}
-      isLoading={isLoading}></PopupWithForm>
+      isLoading={isLoading}
+    ></PopupWithForm>
   );
 }
 
