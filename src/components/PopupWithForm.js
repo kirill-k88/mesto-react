@@ -14,19 +14,17 @@ function PopupWithForm({
         <button
           className="popup__button-close common-link"
           type="button"
-          onClick={onClose}></button>
+          onClick={onClose}
+        ></button>
         <form
           className={`popup__form popup__form_type_${name}`}
           name={`${name}-form`}
           noValidate
-          onSubmit={onSubmit}>
+          onSubmit={onSubmit}
+        >
           <h2 className="popup__title">{title}</h2>
           {children}
-          <button
-            className={`popup__button-submit common-link ${
-              isLoading && 'popup__button-submit_inactive'
-            }`}
-            type="submit">
+          <button className="popup__button-submit common-link" type="submit">
             {!isLoading ? buttonName : 'Сохранение...'}
           </button>
         </form>
