@@ -3,36 +3,30 @@ import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import PopupWithForm from './PopupWithForm';
 
 function EditProfilePopup({ isOpen, onClose, onUpdateUser }) {
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
+  const [inputValues, setInputValues] = useState({ name: '', about: '' });
   const [isLoading, setIsLoading] = useState(false);
-
   const currentUser = useContext(CurrentUserContext);
 
-  function handleNameInputChange(evt) {
-    setName(evt.target.value);
-  }
-
-  function handleDescriptionInputChange(evt) {
-    setDescription(evt.target.value);
+  function handleInputChange(evt) {
+    const { name, value } = evt.target;
+    setInputValues({
+      ...inputValues,
+      [name]: value
+    });
   }
 
   function handleSubmit(evt) {
     evt.preventDefault();
     setIsLoading(true);
-    onUpdateUser(
-      {
-        name,
-        about: description
-      },
-      setIsLoading
-    );
+    onUpdateUser(inputValues, setIsLoading);
   }
 
   useEffect(() => {
-    setName(currentUser.name);
-    setDescription(currentUser.about);
-  }, [currentUser]);
+    setInputValues({
+      name: currentUser.name,
+      about: currentUser.about
+    });
+  }, [currentUser, isOpen]);
 
   return (
     <PopupWithForm
@@ -42,29 +36,30 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser }) {
       isOpen={isOpen}
       isLoading={isLoading}
       onClose={onClose}
-      onSubmit={handleSubmit}>
+      onSubmit={handleSubmit}
+    >
       <input
         className="popup__input popup__input_content_heading"
-        name="profileNameInput"
+        name="name"
         type="text"
         placeholder="Имя"
         required
         minLength="2"
         maxLength="40"
-        value={name || ''}
-        onChange={handleNameInputChange}
+        value={inputValues.name || ''}
+        onChange={handleInputChange}
       />
       <span className="popup__input-error profileNameInput-error"></span>
       <input
         className="popup__input popup__input_content_option"
-        name="ocupationInput"
+        name="about"
         type="text"
         placeholder="О себе"
         required
         minLength="2"
         maxLength="200"
-        value={description || ''}
-        onChange={handleDescriptionInputChange}
+        value={inputValues.about || ''}
+        onChange={handleInputChange}
       />
       <span className="popup__input-error ocupationInput-error"></span>
     </PopupWithForm>

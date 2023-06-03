@@ -98,13 +98,12 @@ function App() {
       });
   }
 
-  function handleAddPlaceSubmit(cardObject, setName, setLink, setIsLoading) {
+  function handleAddPlaceSubmit(cardObject, setInputValues, setIsLoading) {
     api
       .sendNewCard(cardObject)
       .then(result => {
         setCards([result, ...cards]);
-        setName('');
-        setLink('');
+        setInputValues({ name: '', link: '' });
         closeAllPopups();
       })
       .catch(err => {

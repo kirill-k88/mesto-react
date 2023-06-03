@@ -2,30 +2,21 @@ import { useState } from 'react';
 import PopupWithForm from './PopupWithForm';
 
 function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
-  const [name, setName] = useState('');
-  const [link, setLink] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [inputValues, setInputValues] = useState({ name: '', link: '' });
 
   function handleSubmit(evt) {
     evt.preventDefault();
     setIsLoading(true);
-    onAddPlace(
-      {
-        name,
-        link
-      },
-      setName,
-      setLink,
-      setIsLoading
-    );
+    onAddPlace(inputValues, setInputValues, setIsLoading);
   }
 
-  function handleNameInputChange(evt) {
-    setName(evt.target.value);
-  }
-
-  function handleLinkInputChange(evt) {
-    setLink(evt.target.value);
+  function handleInputChange(evt) {
+    const { name, value } = evt.target;
+    setInputValues({
+      ...inputValues,
+      [name]: value
+    });
   }
 
   return (
@@ -36,27 +27,28 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
       isLoading={isLoading}
       isOpen={isOpen}
       onClose={onClose}
-      onSubmit={handleSubmit}>
+      onSubmit={handleSubmit}
+    >
       <input
         className="popup__input popup__input_content_heading"
-        name="cardNameInput"
+        name="name"
         type="text"
         placeholder="Название"
         required
         minLength="2"
         maxLength="30"
-        value={name || ''}
-        onChange={handleNameInputChange}
+        value={inputValues.name || ''}
+        onChange={handleInputChange}
       />
       <span className="popup__input-error cardNameInput-error"></span>
       <input
         className="popup__input popup__input_content_option"
-        name="cardUrlInput"
+        name="link"
         placeholder="Ссылка на картинку"
         required
         type="url"
-        value={link || ''}
-        onChange={handleLinkInputChange}
+        value={inputValues.link || ''}
+        onChange={handleInputChange}
       />
       <span className="popup__input-error cardUrlInput-error"></span>
     </PopupWithForm>

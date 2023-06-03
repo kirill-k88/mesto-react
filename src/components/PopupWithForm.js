@@ -19,7 +19,6 @@ function PopupWithForm({
         <form
           className={`popup__form popup__form_type_${name}`}
           name={`${name}-form`}
-          noValidate
           onSubmit={onSubmit}
         >
           <h2 className="popup__title">{title}</h2>
