@@ -1,0 +1,6 @@
+auth {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin: 39px 200px 0;
+}

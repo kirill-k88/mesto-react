@@ -9,6 +9,8 @@ import EditProfilePopup from './EditProfilePopup.js';
 import EditAvatarPopup from './EditAvatarPopup.js';
 import AddPlacePopup from './AddPlacePopup.js';
 import ConfirmPopup from './ConfirmPopup.js';
+import { Route, Routes } from 'react-router-dom';
+import Register from './Register.js';
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
@@ -145,15 +147,23 @@ function App() {
     <CurrentUserContext.Provider value={currentUser}>
       <div className="root">
         <Header />
-        <Main
-          cards={cards}
-          onEditProfile={handleEditProfileClick}
-          onAddPlace={handleAddPlaceClick}
-          onEditAvatar={handleEditAvatarClick}
-          onCardClick={handleCardClick}
-          onCardLike={handleCardLike}
-          onCardDeleteClick={handleCardDeleteClick}
-        />
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <Main
+                cards={cards}
+                onEditProfile={handleEditProfileClick}
+                onAddPlace={handleAddPlaceClick}
+                onEditAvatar={handleEditAvatarClick}
+                onCardClick={handleCardClick}
+                onCardLike={handleCardLike}
+                onCardDeleteClick={handleCardDeleteClick}
+              />
+            }
+          />
+          <Route path="/sing-up" element={<Register />} />
+        </Routes>
         <EditProfilePopup
           isOpen={isEditProfilePopupOpen}
           onClose={closeAllPopups}
