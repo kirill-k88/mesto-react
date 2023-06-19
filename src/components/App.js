@@ -11,6 +11,8 @@ import AddPlacePopup from './AddPlacePopup.js';
 import ConfirmPopup from './ConfirmPopup.js';
 import { Route, Routes } from 'react-router-dom';
 import Register from './Register.js';
+import Login from './Login.js';
+import ProtectedRoute from './ProtectedRoute.js';
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
@@ -21,6 +23,7 @@ function App() {
   const [selectedCard, setSelectedCard] = useState({});
   const [currentUser, setCurrentUser] = useState({});
   const [cards, setCards] = useState([]);
+  const [loggedIn, setLoggedIn] = useState(true);
 
   function handleEditAvatarClick() {
     setIsEditAvatarPopupOpen(true);
@@ -151,18 +154,24 @@ function App() {
           <Route
             path="/"
             element={
-              <Main
-                cards={cards}
-                onEditProfile={handleEditProfileClick}
-                onAddPlace={handleAddPlaceClick}
-                onEditAvatar={handleEditAvatarClick}
-                onCardClick={handleCardClick}
-                onCardLike={handleCardLike}
-                onCardDeleteClick={handleCardDeleteClick}
+              <ProtectedRoute
+                element={
+                  <Main
+                    cards={cards}
+                    onEditProfile={handleEditProfileClick}
+                    onAddPlace={handleAddPlaceClick}
+                    onEditAvatar={handleEditAvatarClick}
+                    onCardClick={handleCardClick}
+                    onCardLike={handleCardLike}
+                    onCardDeleteClick={handleCardDeleteClick}
+                  />
+                }
+                loggedIn={loggedIn}
               />
             }
           />
           <Route path="/sing-up" element={<Register />} />
+          <Route path="/sing-in" element={<Login />} />
         </Routes>
         <EditProfilePopup
           isOpen={isEditProfilePopupOpen}

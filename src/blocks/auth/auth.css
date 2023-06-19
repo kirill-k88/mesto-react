@@ -1,6 +1,7 @@
-auth {
+.auth {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
-  margin: 39px 200px 0;
+  margin: 60px auto 0;
+  width: 358px;
 }
