@@ -8,6 +8,7 @@ function Register({ onRegister }) {
         title="Регистрация"
         buttonName="Зарегистрироваться"
         buttonLoadingName="Регистрация..."
+        onSubmit={onRegister}
       />
       <Link className="auth__link common-link" to="/sing-in">
         Уже зарегистрированы? Войти

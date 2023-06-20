@@ -7,7 +7,7 @@ function AuthForm({ title, buttonName, buttonLoadingName, onSubmit }) {
   function handleSubmit(evt) {
     evt.preventDefault();
     setIsLoading(true);
-    onSubmit(inputValues, setInputValues, setIsLoading);
+    onSubmit(inputValues, setIsLoading);
   }
 
   function handleInputChange(evt) {

@@ -4,26 +4,32 @@ import Main from './Main.js';
 import Footer from './Footer.js';
 import ImagePopup from './ImagePopup.js';
 import { CurrentUserContext } from '../contexts/CurrentUserContext.js';
-import api from '../utils/Api.js';
+import { api } from '../utils/Api.js';
 import EditProfilePopup from './EditProfilePopup.js';
 import EditAvatarPopup from './EditAvatarPopup.js';
 import AddPlacePopup from './AddPlacePopup.js';
 import ConfirmPopup from './ConfirmPopup.js';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 import Register from './Register.js';
 import Login from './Login.js';
 import ProtectedRoute from './ProtectedRoute.js';
+import InfoTooltip from './InfoTooltip.js';
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
   const [isConfirmPopupOpen, setIsConfirmPopupOpen] = useState(false);
+  const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
   const [confirmFunction, setConfirmFunction] = useState(() => {});
   const [selectedCard, setSelectedCard] = useState({});
   const [currentUser, setCurrentUser] = useState({});
   const [cards, setCards] = useState([]);
-  const [loggedIn, setLoggedIn] = useState(true);
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [isRegisterSuccess, setIsRegisterSuccess] = useState(false);
+  const [email, setEmail] = useState('');
+
+  const navigate = useNavigate();
 
   function handleEditAvatarClick() {
     setIsEditAvatarPopupOpen(true);
@@ -119,11 +125,70 @@ function App() {
       });
   }
 
+  const baseURL = 'https://auth.nomoreparties.co';
+
+  function handleRegister({ password, email }, setIsLoading) {
+    return fetch(`${baseURL}/signup`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password, email })
+    })
+      .then(res => {
+        if (!res.ok) {
+          return Promise.reject(res.status);
+        }
+        return res.json();
+      })
+      .then(data => {
+        console.log(data);
+        navigate('/sing-in');
+        setIsRegisterSuccess(true);
+        setIsInfoTooltipOpen(true);
+      })
+      .catch(err => {
+        console.log(err);
+        setIsRegisterSuccess(false);
+        setIsInfoTooltipOpen(true);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }
+
+  function handleAutorize({ password, email }, setIsLoading) {
+    return fetch(`${baseURL}/signin`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password, email })
+    })
+      .then(res => {
+        if (!res.ok) {
+          return Promise.reject(res.status);
+        }
+        return res.json();
+      })
+      .then(data => {
+        console.log(data);
+        setLoggedIn(true);
+        setEmail(data.email);
+        navigate('/');
+      })
+      .catch(err => {
+        console.log(err);
+        setIsRegisterSuccess(false);
+        setIsInfoTooltipOpen(true);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }
+
   function closeAllPopups() {
     setIsEditAvatarPopupOpen(false);
     setIsEditProfilePopupOpen(false);
     setIsAddPlacePopupOpen(false);
     setIsConfirmPopupOpen(false);
+    setIsInfoTooltipOpen(false);
     setSelectedCard({});
   }
 
@@ -149,7 +214,7 @@ function App() {
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="root">
-        <Header />
+        <Header email={email} loggedIn={loggedIn} />
         <Routes>
           <Route
             path="/"
@@ -170,8 +235,8 @@ function App() {
               />
             }
           />
-          <Route path="/sing-up" element={<Register />} />
-          <Route path="/sing-in" element={<Login />} />
+          <Route path="/sing-up" element={<Register onRegister={handleRegister} />} />
+          <Route path="/sing-in" element={<Login onLogin={handleAutorize} />} />
         </Routes>
         <EditProfilePopup
           isOpen={isEditProfilePopupOpen}
@@ -192,6 +257,11 @@ function App() {
           isOpen={isConfirmPopupOpen}
           onClose={closeAllPopups}
           onConfirm={confirmFunction}
+        />
+        <InfoTooltip
+          isOpen={isInfoTooltipOpen}
+          isRegisterSuccess={isRegisterSuccess}
+          onClose={closeAllPopups}
         />
         <ImagePopup card={selectedCard} onClose={closeAllPopups} />
         <Footer />

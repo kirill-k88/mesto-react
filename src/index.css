@@ -62,6 +62,9 @@
 @import url(./blocks/popup/__caption/popup__caption.css);
 @import url(./blocks/popup/__image/popup__image.css);
 @import url(./blocks/popup/__container/_isImage/popup__container_isImage.css);
+@import url(./blocks/popup/__icon/popup__icon.css);
+@import url(./blocks/popup/__label/popup__label.css);
+@import url(./blocks/popup/__container/_isTooltip/popup__container_isTooltip.css);
 
 @import url(./blocks/footer/footer.css);
 @import url(./blocks/footer/__copyright/footer__copyright.css);
