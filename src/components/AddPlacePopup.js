@@ -24,6 +24,7 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
       name="add"
       title="Новое место"
       buttonName="Создать"
+      buttonLoadingName="Создание..."
       isLoading={isLoading}
       isOpen={isOpen}
       onClose={onClose}

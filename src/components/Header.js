@@ -1,13 +1,8 @@
-import { useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import logo from '../images/header/header-logo.svg';
 
-function Header({ email, loggedIn }) {
+function Header({ email, loggedIn, onLogout }) {
   const location = useLocation();
-
-  useEffect(() => {
-    console.log(location.pathname, email);
-  }, [location, email]);
 
   function getLink() {
     if (location.pathname === '/sing-in' && !loggedIn) {
@@ -16,11 +11,11 @@ function Header({ email, loggedIn }) {
           Регистрация
         </Link>
       );
-    } else if (location.pathname === '/sing-in' && loggedIn) {
+    } else if (loggedIn) {
       return (
-        <Link className="header__link common-link" to="/sing-up">
+        <button className="header__link common-link" type="button" onClick={onLogout}>
           Выход
-        </Link>
+        </button>
       );
     }
     return (

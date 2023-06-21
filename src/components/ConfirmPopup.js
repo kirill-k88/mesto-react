@@ -16,6 +16,7 @@ function ConfirmPopup({ isOpen, onClose, onConfirm }) {
       name="confirm"
       title="Вы уверены?"
       buttonName="Да"
+      buttonLoadingName="Удаление..."
       isOpen={isOpen}
       onClose={onClose}
       onSubmit={handleSubmit}

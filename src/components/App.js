@@ -139,8 +139,7 @@ function App() {
         }
         return res.json();
       })
-      .then(data => {
-        console.log(data);
+      .then(() => {
         navigate('/sing-in');
         setIsRegisterSuccess(true);
         setIsInfoTooltipOpen(true);
@@ -155,7 +154,7 @@ function App() {
       });
   }
 
-  function handleAutorize({ password, email }, setIsLoading) {
+  function handleLogin({ password, email }, setIsLoading) {
     return fetch(`${baseURL}/signin`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -168,19 +167,46 @@ function App() {
         return res.json();
       })
       .then(data => {
-        console.log(data);
         setLoggedIn(true);
-        setEmail(data.email);
+        localStorage.setItem('token', data.token);
+        return checkToken();
+      })
+      .then(checkAnswer => {
+        setEmail(checkAnswer.data.email);
         navigate('/');
       })
       .catch(err => {
         console.log(err);
         setIsRegisterSuccess(false);
         setIsInfoTooltipOpen(true);
+        setIsLoading(false);
       })
       .finally(() => {
         setIsLoading(false);
       });
+  }
+
+  function checkToken() {
+    return fetch(`${baseURL}/users/me`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      }
+    }).then(res => {
+      if (!res.ok) {
+        localStorage.removeItem('token');
+        return Promise.reject(res.status);
+      }
+      return res.json();
+    });
+  }
+
+  function handleLogout() {
+    setLoggedIn(false);
+    localStorage.removeItem('token');
+    setEmail('');
+    navigate('/sing-in');
   }
 
   function closeAllPopups() {
@@ -191,6 +217,20 @@ function App() {
     setIsInfoTooltipOpen(false);
     setSelectedCard({});
   }
+
+  useEffect(() => {
+    if (localStorage.getItem('token')) {
+      checkToken()
+        .then(checkAnswer => {
+          setEmail(checkAnswer.data.email);
+          setLoggedIn(true);
+          navigate('/');
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }
+  }, []);
 
   useEffect(() => {
     Promise.all([api.getUserInfo(), api.getInitialCards()])
@@ -214,7 +254,7 @@ function App() {
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="root">
-        <Header email={email} loggedIn={loggedIn} />
+        <Header email={email} loggedIn={loggedIn} onLogout={handleLogout} />
         <Routes>
           <Route
             path="/"
@@ -236,7 +276,7 @@ function App() {
             }
           />
           <Route path="/sing-up" element={<Register onRegister={handleRegister} />} />
-          <Route path="/sing-in" element={<Login onLogin={handleAutorize} />} />
+          <Route path="/sing-in" element={<Login onLogin={handleLogin} />} />
         </Routes>
         <EditProfilePopup
           isOpen={isEditProfilePopupOpen}

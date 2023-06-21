@@ -2,6 +2,7 @@ function PopupWithForm({
   name,
   title,
   buttonName,
+  buttonLoadingName,
   isOpen,
   onClose,
   children,
@@ -24,7 +25,7 @@ function PopupWithForm({
           <h2 className="popup__title">{title}</h2>
           {children}
           <button className="popup__button-submit common-link" type="submit">
-            {!isLoading ? buttonName : 'Сохранение...'}
+            {!isLoading ? buttonName : buttonLoadingName}
           </button>
         </form>
       </div>
