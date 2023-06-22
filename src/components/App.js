@@ -9,7 +9,7 @@ import EditProfilePopup from './EditProfilePopup.js';
 import EditAvatarPopup from './EditAvatarPopup.js';
 import AddPlacePopup from './AddPlacePopup.js';
 import ConfirmPopup from './ConfirmPopup.js';
-import { Route, Routes, useNavigate } from 'react-router-dom';
+import { Route, Routes, useNavigate, Navigate } from 'react-router-dom';
 import Register from './Register.js';
 import Login from './Login.js';
 import ProtectedRoute from './ProtectedRoute.js';
@@ -229,6 +229,8 @@ function App() {
         .catch(err => {
           console.log(err);
         });
+    } else {
+      navigate('/sing-in');
     }
   }, []);
 
@@ -277,6 +279,7 @@ function App() {
           />
           <Route path="/sing-up" element={<Register onRegister={handleRegister} />} />
           <Route path="/sing-in" element={<Login onLogin={handleLogin} />} />
+          <Route path="*" element={<Navigate to="/sing-in" replace />} />
         </Routes>
         <EditProfilePopup
           isOpen={isEditProfilePopupOpen}

@@ -29,7 +29,7 @@ function Header({ email, loggedIn, onLogout }) {
     <header className="header">
       <img className="header__logo" src={logo} alt="Лого" />
       <div className="header__loginContainer">
-        {loggedIn && <p className="header__login">{email}</p>}
+        {loggedIn && <p className="header__email">{email}</p>}
         {getLink()}
       </div>
     </header>
